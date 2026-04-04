@@ -25,16 +25,16 @@ To build a machine learning classifier that detects and categorizes hate speech 
 ├── README.md
 ├── requirements.txt
 ├── data/
-│   ├── raw/           → raw dataset files or download instructions
-│   ├── processed/     → cleaned and merged dataset
-│   └── README.md      → dataset access instructions
+│   ├── raw/           
+│   ├── processed/     
+│   └── README.md     
 ├── scripts/
 │   ├── 01_load_data.py
 │   ├── 02_preprocess_data.py
 │   └── 03_basic_eda.py
 ├── outputs/
-│   ├── figures/       → generated plots
-│   └── tables/        → generated tables
+│   ├── figures/     
+│   └── tables/      
 └── docs/
 └── ResearchProposalPreprocessing.md
 ```
