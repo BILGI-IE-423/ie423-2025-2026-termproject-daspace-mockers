@@ -22,21 +22,28 @@ To build a machine learning classifier that detects and categorizes hate speech 
 
 ## Repository Structure
 ```
+|
 ├── README.md
 ├── requirements.txt
+|
 ├── data/
-│   ├── raw/           
-│   ├── processed/     
-│   └── README.md     
+│   ├── raw/
+|   |   └── dataset file(s) or dataset link instructions
+│   ├── processed/
+|   |   └── cleaned data outputs
+│   └── README.md
+|
 ├── scripts/
 │   ├── 01_load_data.py
 │   ├── 02_preprocess_data.py
 │   └── 03_basic_eda.py
+|
 ├── outputs/
 │   ├── figures/     
-│   └── tables/      
+│   └── tables/
+|
 └── docs/
-└── ResearchProposalPreprocessing.md
+    └── ResearchProposalPreprocessing.md
 ```
 ## Installation
 ```bash
