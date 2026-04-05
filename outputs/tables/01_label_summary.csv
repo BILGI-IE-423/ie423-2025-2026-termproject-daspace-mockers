@@ -1,0 +1,7 @@
+label,Count,Avg_Length,Avg_Words,Percentage
+Offensive Language,18802,62.94,12.88,30.35
+Not Hate,15000,54.68,10.67,24.22
+Racist,12673,50.97,10.0,20.46
+Other Hate,8751,54.68,10.32,14.13
+Sexist,6400,61.02,11.76,10.33
+Religion,319,55.93,9.82,0.51
