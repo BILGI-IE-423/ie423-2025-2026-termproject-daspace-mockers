@@ -121,7 +121,6 @@ We applied the following cleaning steps to all tweet texts:
 - Lowercasing
 - Removing URLs (`http`, `www`)
 - Removing @mentions
-- Removing `#` symbol but keeping the hashtag word
 - Removing punctuation
 - Removing digits
 - Stripping extra whitespace
