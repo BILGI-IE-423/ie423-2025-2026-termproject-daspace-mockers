@@ -55,7 +55,7 @@ Run the scripts in order from the root of the repository:
 ```bash
 python scripts/01_load_data.py
 python scripts/02_preprocess_data.py
-python scripts/03_basic_eda.py
+python scripts/03_eda.py
 ```
 
 > **Note:** Place the raw dataset files inside `data/raw/` before running. See `data/README.md` for instructions.
