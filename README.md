@@ -1,4 +1,4 @@
-# IE 423 Term Project — Hate Speech in Social Media: Detecting Polarized Tweets Using Machine Learning
+# IE 423 Term Project — Emotion Detection in Social Media: Classifying Reddit Comments Using Machine Learning
 
 ## Team Members
 - Basil Mohammad A. Sadlah — 123203115
@@ -7,18 +7,16 @@
 - Mohammed Saleh Mohammed Al-Hamami — 120203098
 
 ## Dataset
-We use three publicly available, peer-reviewed hate speech datasets:
+We use the **GoEmotions** dataset by Google Research:
 
 | Dataset | Source | Year |
 |---|---|---|
-| Hate Speech & Offensive Language | Davidson et al., ICWSM 2017 | 2017 |
-| Call Me Sexist But (CMSB) | Samory et al., ICWSM 2021 | 2021 |
-| MMHS150K | Gomez et al., IEEE/CVF WACV 2020 | 2020 |
+| GoEmotions | Demszky et al., ACL 2020 | 2020 |
 
-After preprocessing and merging, the final dataset contains **61,945 tweets** across **6 categories**.
+After preprocessing, the final dataset contains **58,008 Reddit comments** across **7 emotion categories**.
 
 ## Project Objective
-To build a machine learning classifier that detects and categorizes hate speech in tweets into the following classes: Racist, Sexist, Offensive Language, Other Hate, Religion, and Not Hate.
+To build a machine learning classifier that detects and categorizes emotions in Reddit comments into the following classes based on Parrot's emotion framework: Joy, Love, Surprise, Anger, Sadness, Fear, and Neutral.
 
 ## Repository Structure
 ```
@@ -28,9 +26,9 @@ To build a machine learning classifier that detects and categorizes hate speech 
 |
 ├── data/
 │   ├── raw/
-|   |   └── dataset file(s) or dataset link instructions
+|   |   └── go_emotions_raw.csv
 │   ├── processed/
-|   |   └── cleaned data outputs
+|   |   └── combined_dataset.csv
 │   └── README.md
 |
 ├── scripts/
@@ -39,11 +37,11 @@ To build a machine learning classifier that detects and categorizes hate speech 
 │   └── 03_basic_eda.py
 |
 ├── outputs/
-│   ├── figures/     
+│   ├── figures/
 │   └── tables/
 |
 └── docs/
-    └── ResearchProposalPreprocessing.md
+└── ResearchProposalPreprocessing.md
 ```
 ## Installation
 ```bash
@@ -55,10 +53,10 @@ Run the scripts in order from the root of the repository:
 ```bash
 python scripts/01_load_data.py
 python scripts/02_preprocess_data.py
-python scripts/03_eda.py
+python scripts/03_basic_eda.py
 ```
 
-> **Note:** Place the raw dataset files inside `data/raw/` before running. See `data/README.md` for instructions.
+> **Note:** Raw data is automatically downloaded when running `01_load_data.py`. See `data/README.md` for details.
 
 ## Main Proposal Document
 See: `docs/ResearchProposalPreprocessing.md`
