@@ -1,82 +1,63 @@
 import pandas as pd
-import json
-from collections import Counter
+from datasets import load_dataset
 import os
-import shutil
 
-# Create folder structure
+# ── Create folder structure ──────────────────────────────────────────────────
 os.makedirs('data/raw', exist_ok=True)
 os.makedirs('data/processed', exist_ok=True)
 os.makedirs('outputs/figures', exist_ok=True)
 os.makedirs('outputs/tables', exist_ok=True)
 
-# Auto-move datasets to data/raw/ if found in root
-files_to_move = ['labeled_data.csv', 'sexism_data.csv', 'MMHS150K_GT.json']
-for file in files_to_move:
-    if os.path.exists(file) and not os.path.exists(f'data/raw/{file}'):
-        shutil.move(file, f'data/raw/{file}')
-        print(f"Moved {file} → data/raw/")
+# ── Load GoEmotions (raw) ────────────────────────────────────────────────────
+print("Loading GoEmotions dataset...")
+dataset = load_dataset("google-research-datasets/go_emotions", "raw")
+df = pd.DataFrame(dataset['train'])
+print(f"Raw dataset shape: {df.shape}")
+print(f"Unique comments: {df['id'].nunique()}")
 
-os.makedirs('data/raw', exist_ok=True)
-os.makedirs('data/processed', exist_ok=True)
-os.makedirs('outputs/figures', exist_ok=True)
-os.makedirs('outputs/tables', exist_ok=True)
+# ── Aggregate by comment ID (one row per comment) ────────────────────────────
+emotion_cols = [
+    'admiration', 'amusement', 'anger', 'annoyance', 'approval', 'caring',
+    'confusion', 'curiosity', 'desire', 'disappointment', 'disapproval',
+    'disgust', 'embarrassment', 'excitement', 'fear', 'gratitude', 'grief',
+    'joy', 'love', 'nervousness', 'optimism', 'pride', 'realization',
+    'relief', 'remorse', 'sadness', 'surprise', 'neutral'
+]
 
-print("Starting dataset loading...\n")
+df_agg = df.groupby('id').agg(
+    text=('text', 'first'),
+    **{col: (col, 'max') for col in emotion_cols}
+).reset_index()
 
-# -------------------------------
-# Dataset 1: Davidson
-# -------------------------------
-davidson = pd.read_csv('data/raw/labeled_data.csv')
-print("\n[Dataset 1] Davidson")
-print("Shape:", davidson.shape)
-print("Columns:", davidson.columns.tolist())
-print("Missing values:\n", davidson.isnull().sum())
+print(f"Aggregated dataset shape: {df_agg.shape}")
 
-if 'class' in davidson.columns:
-    print("\nClass distribution:")
-    print(davidson['class'].value_counts())
-
-# -------------------------------
-# Dataset 2: GESIS
-# -------------------------------
-gesis = pd.read_csv('data/raw/sexism_data.csv')
-print("\n[Dataset 2] GESIS")
-print("Shape:", gesis.shape)
-print("Columns:", gesis.columns.tolist())
-print("Missing values:\n", gesis.isnull().sum())
-
-if 'sexist' in gesis.columns:
-    print("\nClass distribution:")
-    print(gesis['sexist'].value_counts())
-
-# -------------------------------
-# Dataset 3: MMHS150K
-# -------------------------------
-with open('data/raw/MMHS150K_GT.json', 'r') as f:
-    data = json.load(f)
-
-mmhs = pd.DataFrame.from_dict(data, orient='index')
-
-label_map = {
-    0: 'Not Hate',
-    1: 'Racist',
-    2: 'Sexist',
-    3: 'Homophobe',
-    4: 'Religion',
-    5: 'Other Hate'
+# ── Apply Parrot mapping ─────────────────────────────────────────────────────
+parrot_mapping = {
+    'joy':      ['joy', 'amusement', 'excitement', 'optimism', 'pride', 'relief', 'gratitude', 'approval'],
+    'love':     ['love', 'admiration', 'caring', 'desire'],
+    'surprise': ['surprise', 'realization', 'confusion', 'curiosity'],
+    'anger':    ['anger', 'annoyance', 'disapproval', 'disgust', 'embarrassment'],
+    'sadness':  ['sadness', 'disappointment', 'grief', 'remorse'],
+    'fear':     ['fear', 'nervousness'],
+    'neutral':  ['neutral']
 }
 
-def majority_vote(labels):
-    return Counter(labels).most_common(1)[0][0]
+def assign_parrot_label(row):
+    for parrot_class, emotions in parrot_mapping.items():
+        if any(row[e] == 1 for e in emotions):
+            return parrot_class
+    return None
 
-mmhs['label'] = mmhs['labels'].apply(majority_vote).map(label_map)
+df_agg['parrot_label'] = df_agg.apply(assign_parrot_label, axis=1)
 
-print("\n[Dataset 3] MMHS150K")
-print("Shape:", mmhs.shape)
-print("Columns:", mmhs.columns.tolist())
-print("Missing values:\n", mmhs.isnull().sum())
-print("\nLabel distribution:")
-print(mmhs['label'].value_counts())
+# ── Drop unlabeled rows ──────────────────────────────────────────────────────
+df_agg = df_agg[df_agg['parrot_label'].notna()].reset_index(drop=True)
+print(f"After dropping unlabeled: {len(df_agg)} rows")
 
-print("\nAll datasets loaded successfully.")
+# ── Save raw aggregated ──────────────────────────────────────────────────────
+df_agg[['text', 'parrot_label']].to_csv('data/raw/go_emotions_raw.csv', index=False)
+print("Saved to data/raw/go_emotions_raw.csv")
+
+# ── Print class distribution ─────────────────────────────────────────────────
+print("\nClass distribution:")
+print(df_agg['parrot_label'].value_counts())
