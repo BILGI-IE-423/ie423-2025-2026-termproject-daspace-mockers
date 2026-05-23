@@ -5,8 +5,7 @@ import os
 # ── Create folder structure ──────────────────────────────────────────────────
 os.makedirs('data/raw', exist_ok=True)
 os.makedirs('data/processed', exist_ok=True)
-os.makedirs('outputs/figures', exist_ok=True)
-os.makedirs('outputs/tables', exist_ok=True)
+os.makedirs('visuals', exist_ok=True)
 
 # ── Load GoEmotions (raw) ────────────────────────────────────────────────────
 print("Loading GoEmotions dataset...")
