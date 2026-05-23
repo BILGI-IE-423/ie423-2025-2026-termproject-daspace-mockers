@@ -1,0 +1,8 @@
+parrot_label,count,avg_length,avg_words
+anger,7663,67.99,12.56
+fear,371,65.46,12.15
+joy,29222,70.09,13.26
+love,6552,66.42,12.59
+neutral,4268,58.77,10.93
+sadness,1660,65.47,12.34
+surprise,8272,70.74,13.28
