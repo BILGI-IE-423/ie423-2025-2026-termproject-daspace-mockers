@@ -22,7 +22,7 @@ To build a machine learning classifier that detects and categorizes emotions in 
 
 ## Repository Structure
 
-`
+```
 |
 ├── README.md
 ├── index.html
@@ -48,7 +48,7 @@ To build a machine learning classifier that detects and categorizes emotions in 
 |
 └── notebooks/
 └── DaSpace_Mockers_IE423.ipynb
-`
+```
 
 ## Installation
 ```bash
